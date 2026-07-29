@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --color-patient: #14b8a6;
+  --color-patient-dark: #0f766e;
+  --color-doctor: #6366f1;
+  --color-doctor-dark: #4338ca;
+  --color-surface: #f8fafc;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
