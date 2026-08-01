@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const specialtyColors = {
   Cardiologist: 'bg-rose-100 text-rose-700',
@@ -10,6 +11,7 @@ function Doctors() {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/doctors`)
@@ -55,9 +57,12 @@ function Doctors() {
 
               <p className="text-sm text-slate-500 flex-1">{doc.bio}</p>
 
-              <button className="mt-5 w-full bg-doctor hover:bg-doctor-dark text-white font-semibold py-2 rounded-lg transition-colors">
-                View Slots
-              </button>
+              <button
+  onClick={() => navigate(`/doctors/${doc.id}/slots`)}
+  className="mt-5 w-full bg-doctor hover:bg-doctor-dark text-white font-semibold py-2 rounded-lg transition-colors"
+>
+  View Slots
+</button>
             </div>
           ))}
         </div>
