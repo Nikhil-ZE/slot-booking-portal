@@ -1,13 +1,40 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: connect to backend /login route
-    console.log({ email, password });
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong');
+        setLoading(false);
+        return;
+      }
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      navigate('/doctors');
+    } catch (err) {
+      setError('Could not connect to the server. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -15,6 +42,12 @@ function Login() {
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         <h1 className="text-3xl font-bold text-slate-800 mb-2">Welcome back</h1>
         <p className="text-slate-500 mb-8">Log in to book or manage appointments</p>
+
+        {error && (
+          <div className="bg-red-50 text-red-600 text-sm px-4 py-2.5 rounded-lg mb-5">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
@@ -43,14 +76,15 @@ function Login() {
 
           <button
             type="submit"
-            className="w-full bg-doctor hover:bg-doctor-dark text-white font-semibold py-2.5 rounded-lg transition-colors"
+            disabled={loading}
+            className="w-full bg-doctor hover:bg-doctor-dark text-white font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-60"
           >
-            Log In
+            {loading ? 'Logging in...' : 'Log In'}
           </button>
         </form>
 
         <p className="text-center text-sm text-slate-500 mt-6">
-          Don't have an account? <a href="/register" className="text-doctor font-medium hover:underline">Sign up</a>
+          Don't have an account? <Link to="/register" className="text-doctor font-medium hover:underline">Sign up</Link>
         </p>
       </div>
     </div>
