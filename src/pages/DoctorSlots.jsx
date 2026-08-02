@@ -10,6 +10,7 @@ function DoctorSlots() {
 
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [age, setAge] = useState('');
   const [address, setAddress] = useState('');
   const [paymentType, setPaymentType] = useState('upi');
@@ -46,6 +47,7 @@ function DoctorSlots() {
   const closeForm = () => {
     setSelectedSlot(null);
     setName('');
+    setEmail('');
     setAge('');
     setAddress('');
     setPaymentType('upi');
@@ -65,6 +67,7 @@ function DoctorSlots() {
           patient_name: name,
           patient_age: age,
           patient_address: address,
+          patient_email: email,
           payment_type: paymentType,
         }),
       });
@@ -133,7 +136,7 @@ function DoctorSlots() {
                 <h2 className="text-2xl font-bold text-slate-800 mb-2">Booking Confirmed!</h2>
                 <p className="text-slate-500 mb-6">
                   Your appointment with {doctor?.name} on {selectedSlot.slot_date} at{' '}
-                  {selectedSlot.start_time.slice(0, 5)} is confirmed.
+                  {selectedSlot.start_time.slice(0, 5)} is confirmed. A confirmation email has been sent to you.
                 </p>
                 <button
                   onClick={closeForm}
@@ -163,6 +166,18 @@ function DoctorSlots() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-patient focus:border-transparent"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-patient focus:border-transparent"
+                      placeholder="you@example.com"
                       required
                     />
                   </div>
