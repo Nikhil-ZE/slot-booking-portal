@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+const specialties = ['Cardiologist', 'Dermatologist', 'Pediatrician', 'General Physician', 'Orthopedic', 'Neurologist'];
+
 function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('patient');
+  const [specialty, setSpecialty] = useState(specialties[0]);
+  const [bio, setBio] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,10 +20,16 @@ function Register() {
     setLoading(true);
 
     try {
+      const body = { name, email, password, role };
+      if (role === 'doctor') {
+        body.specialty = specialty;
+        body.bio = bio;
+      }
+
       const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role }),
+        body: JSON.stringify(body),
       });
 
       const data = await res.json();
@@ -31,13 +41,13 @@ function Register() {
       }
 
       localStorage.setItem('token', data.token);
-localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('user', JSON.stringify(data.user));
 
-if (data.user.role === 'doctor') {
-  navigate('/dashboard');
-} else {
-  navigate('/doctors');
-}
+      if (data.user.role === 'doctor') {
+        navigate('/dashboard');
+      } else {
+        navigate('/doctors');
+      }
     } catch (err) {
       setError('Could not connect to the server. Please try again.');
       setLoading(false);
@@ -45,7 +55,7 @@ if (data.user.role === 'doctor') {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center px-4">
+    <div className="min-h-screen bg-surface flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         <h1 className="text-3xl font-bold text-slate-800 mb-2">Create account</h1>
         <p className="text-slate-500 mb-8">Sign up to book appointments with doctors</p>
@@ -120,6 +130,34 @@ if (data.user.role === 'doctor') {
               </button>
             </div>
           </div>
+
+          {role === 'doctor' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Specialty</label>
+                <select
+                  value={specialty}
+                  onChange={(e) => setSpecialty(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-doctor focus:border-transparent bg-white"
+                >
+                  {specialties.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Short bio</label>
+                <textarea
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  rows="2"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-doctor focus:border-transparent"
+                  placeholder="A brief line about your experience"
+                />
+              </div>
+            </>
+          )}
 
           <button
             type="submit"
