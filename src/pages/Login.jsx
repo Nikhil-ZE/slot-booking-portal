@@ -29,8 +29,13 @@ function Login() {
       }
 
       localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      navigate('/doctors');
+localStorage.setItem('user', JSON.stringify(data.user));
+
+if (data.user.role === 'doctor') {
+  navigate('/dashboard');
+} else {
+  navigate('/doctors');
+}
     } catch (err) {
       setError('Could not connect to the server. Please try again.');
       setLoading(false);
