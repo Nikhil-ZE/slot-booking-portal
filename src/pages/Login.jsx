@@ -33,6 +33,8 @@ localStorage.setItem('user', JSON.stringify(data.user));
 
 if (data.user.role === 'doctor') {
   navigate('/dashboard');
+} else if (data.user.role === 'admin') {
+  navigate('/admin');
 } else {
   navigate('/doctors');
 }
