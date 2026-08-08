@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Doctors from './pages/Doctors';
 import DoctorDashboard from './pages/DoctorDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import VerifyOtp from './pages/VerifyOtp';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/doctors/:id/slots" element={<DoctorSlots />} />
         <Route path="/dashboard" element={<DoctorDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
     
       </Routes>
     </BrowserRouter>

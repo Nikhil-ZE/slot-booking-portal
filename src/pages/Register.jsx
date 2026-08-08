@@ -40,14 +40,7 @@ function Register() {
         return;
       }
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      if (data.user.role === 'doctor') {
-        navigate('/dashboard');
-      } else {
-        navigate('/doctors');
-      }
+      navigate('/verify-otp', { state: { email } });
     } catch (err) {
       setError('Could not connect to the server. Please try again.');
       setLoading(false);

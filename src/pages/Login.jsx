@@ -23,21 +23,25 @@ function Login() {
       const data = await res.json();
 
       if (!res.ok) {
+        if (data.needsVerification) {
+          navigate('/verify-otp', { state: { email } });
+          return;
+        }
         setError(data.error || 'Something went wrong');
         setLoading(false);
         return;
       }
 
       localStorage.setItem('token', data.token);
-localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('user', JSON.stringify(data.user));
 
-if (data.user.role === 'doctor') {
-  navigate('/dashboard');
-} else if (data.user.role === 'admin') {
-  navigate('/admin');
-} else {
-  navigate('/doctors');
-}
+      if (data.user.role === 'doctor') {
+        navigate('/dashboard');
+      } else if (data.user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/doctors');
+      }
     } catch (err) {
       setError('Could not connect to the server. Please try again.');
       setLoading(false);
